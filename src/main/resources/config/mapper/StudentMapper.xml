@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.study.dangdang.sharding.jdbc.mapper.StudentMapper" >
+    <resultMap id="resultMap" type="com.study.dangdang.sharding.jdbc.entity.Student" >
+        <id     property="id"        column="id"         jdbcType="INTEGER" />
+        <result property="studentId" column="student_id" jdbcType="INTEGER" />
+        <result property="name"      column="name"       jdbcType="VARCHAR" />
+        <result property="age"       column="age"        jdbcType="INTEGER" />
+    </resultMap>
+  
+    <insert id="insert">
+        insert into t_student (student_id,name,age) values (#{studentId},#{name},#{age})
+    </insert>
+  
+    <select id="findAll" resultMap="resultMap">
+        select <include refid="columnsName"/> from t_student
+    </select>
+  
+    <select id="findByStudentIds" resultMap="resultMap">
+        select <include refid="columnsName"/> from t_student where student_id in (
+        <foreach collection="list" item="item" separator=",">
+            #{item}
+        </foreach>)
+    </select>
+  
+    <sql id="columnsName">
+        id,student_id,name,age
+    </sql>
+</mapper>
